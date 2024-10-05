@@ -101,24 +101,28 @@ def schedule_video_posting(video_paths):
     Args:
         video_paths (list): List of video file paths to post.
     """
-    if len(video_paths) < 5:
-        print(f"Not enough videos to post, found {len(video_paths)} videos.")
-        return
+   # Schedule posting at different times using filename as title and description
+    for i in range(5):
+        file_path = video_paths[i]
+        title = os.path.basename(file_path).rsplit('.', 1)[0]  # Get the filename without extension
+        description = title  # Use the filename as the description
 
-    youtube = authenticate_youtube()
+        # Define the scheduled time based on index
+        if i == 0:
+            schedule_time = "03:00"
+        elif i == 1:
+            schedule_time = "09:00"
+        elif i == 2:
+            schedule_time = "13:00"
+        elif i == 3:
+            schedule_time = "16:00"
+        elif i == 4:
+            schedule_time = "23:00"
 
-    # Define video metadata (change as needed)
-    titles = ["Epic Gameplay", "Gaming Highlights", "Best Game Clips", "Daily Game", "Gaming Tutorial"]
-    descriptions = ["Epic moments in gaming.", "The best gaming highlights.", "Enjoy the best gameplay moments.", "Daily game highlights.", "Pro gamer tips and tricks."]
-    
-    # Schedule posting at different times
-    schedule.every().day.at("03:00").do(upload_video_to_youtube, youtube, video_paths[0], titles[0], descriptions[0])
-    schedule.every().day.at("09:00").do(upload_video_to_youtube, youtube, video_paths[1], titles[1], descriptions[1])
-    schedule.every().day.at("13:00").do(upload_video_to_youtube, youtube, video_paths[2], titles[2], descriptions[2])
-    schedule.every().day.at("16:00").do(upload_video_to_youtube, youtube, video_paths[3], titles[3], descriptions[3])
-    schedule.every().day.at("23:00").do(upload_video_to_youtube, youtube, video_paths[4], titles[4], descriptions[4])
+        # Schedule the video upload
+        schedule.every().day.at(schedule_time).do(upload_video_to_youtube, youtube, file_path, title, description)
 
-    print("Scheduled video posts at 3AM, 9AM, 1PM, 4PM, and 11PM.")
+    print("Scheduled video posts at 3AM, 9AM, 1PM, 4PM, and 11PM using file names as titles and descriptions.")
 
     while True:
         schedule.run_pending()
