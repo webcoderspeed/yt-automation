@@ -102,7 +102,7 @@ def schedule_video_posting(video_paths):
         video_paths (list): List of video file paths to post.
     """
 # Assuming the first video should be uploaded first and so on
-    upload_times = ["17:00", "09:00", "13:00", "16:00", "23:00"]  # Times for each video
+    upload_times = ["03:00", "09:00", "13:00", "16:00", "23:00"]  # Times for each video
 
     # Authenticate YouTube once to use for all uploads
     youtube = authenticate_youtube()
