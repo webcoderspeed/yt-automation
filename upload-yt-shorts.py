@@ -101,26 +101,21 @@ def schedule_video_posting(video_paths):
     Args:
         video_paths (list): List of video file paths to post.
     """
-   # Schedule posting at different times using filename as title and description
-    for i in range(5):
+# Assuming the first video should be uploaded first and so on
+    upload_times = ["17:00", "09:00", "13:00", "16:00", "23:00"]  # Times for each video
+
+    # Authenticate YouTube once to use for all uploads
+    youtube = authenticate_youtube()
+
+    for i in range(len(video_paths)):
         file_path = video_paths[i]
         title = os.path.basename(file_path).rsplit('.', 1)[0]  # Get the filename without extension
         description = title  # Use the filename as the description
 
-        # Define the scheduled time based on index
-        if i == 0:
-            schedule_time = "03:00"
-        elif i == 1:
-            schedule_time = "09:00"
-        elif i == 2:
-            schedule_time = "13:00"
-        elif i == 3:
-            schedule_time = "16:00"
-        elif i == 4:
-            schedule_time = "23:00"
+        # Schedule the upload
+        if i < len(upload_times):
+            schedule.every().day.at(upload_times[i]).do(upload_video_to_youtube, youtube, file_path, title, description)
 
-        # Schedule the video upload
-        schedule.every().day.at(schedule_time).do(upload_video_to_youtube, youtube, file_path, title, description)
 
     print("Scheduled video posts at 3AM, 9AM, 1PM, 4PM, and 11PM using file names as titles and descriptions.")
 
